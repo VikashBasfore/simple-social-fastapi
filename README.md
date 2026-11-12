@@ -1,37 +1,40 @@
-# Simple Social
+# Simple Social – FastAPI Application
 
-A media-sharing web application built using **FastAPI** and **Streamlit**. Users can create an account, log in securely, upload images or videos with captions, view posts in a feed, and delete their own posts.
+A lightweight social media application built with **FastAPI** and **Streamlit**, featuring user authentication, media uploads, and a personalized social feed.
 
-## Features
+## Overview
 
-- User registration and login
-- JWT-based authentication
-- Protected API endpoints
-- Image and video uploads
-- Media storage using ImageKit
-- Post metadata stored in SQLite
-- Feed displaying posts, captions, authors, and dates
-- Delete functionality for post owners
-- Interactive API documentation with Swagger UI
+Simple Social is a full-stack application that allows users to create accounts, authenticate securely, upload images and videos, and interact with posts through a simple interface.
 
-## Tech Stack
+The project demonstrates REST API development, authentication, database integration, media management, and frontend-backend communication using Python.
 
-| Component | Technology |
+## Key Features
+
+- **User Authentication:** User registration and login using JWT authentication.
+- **Protected APIs:** Secure endpoints accessible to authenticated users.
+- **Media Upload:** Upload images and videos with captions.
+- **Cloud Storage:** Store media using ImageKit.
+- **Social Feed:** Retrieve posts with author information and media URLs.
+- **Post Management:** Allow users to delete their own posts.
+- **Interactive Frontend:** Streamlit interface integrated with FastAPI.
+- **API Documentation:** Interactive API documentation through Swagger UI.
+
+## Technology Stack
+
+| Category | Technologies |
 |---|---|
-| Backend | FastAPI |
-| ASGI Server | Uvicorn |
+| Backend | Python, FastAPI, Uvicorn |
 | Frontend | Streamlit |
-| Database | SQLite |
-| ORM | SQLAlchemy |
+| Database | SQLite, SQLAlchemy |
 | Authentication | FastAPI Users, JWT |
-| Data Validation | Pydantic |
+| Validation | Pydantic |
 | Media Storage | ImageKit |
-| Package Management | uv |
+| Environment Management | uv |
 
 ## Project Structure
 
 ```text
-FastAPI-Tutorial/
+simple-social-fastapi/
 │
 ├── src/
 │   └── app/
@@ -42,41 +45,32 @@ FastAPI-Tutorial/
 │       ├── schemas.py
 │       └── users.py
 │
-├── frontend.py
 ├── main.py
+├── frontend.py
 ├── pyproject.toml
 ├── uv.lock
-├── .env
 ├── .gitignore
-└── test.db
+└── README.md
 ```
 
-## How It Works
+## Application Workflow
 
-1. Users register or log in through the Streamlit interface.
-2. FastAPI authenticates users and generates a JWT access token.
-3. Streamlit sends the token in the authorization header for protected API requests.
-4. Users upload images or videos with optional captions.
-5. FastAPI uploads media files to ImageKit.
-6. ImageKit returns a media URL.
-7. Post details and media URLs are stored in the SQLite database using SQLAlchemy.
-8. The Feed API retrieves posts and associated user information.
-9. Streamlit displays posts, images, videos, and captions.
-10. Users can delete their own posts.
+1. Users register and log in through the Streamlit frontend.
+2. FastAPI authenticates users and generates JWT tokens.
+3. The frontend uses the token to access protected API endpoints.
+4. Users upload images or videos with captions.
+5. FastAPI uploads media to ImageKit.
+6. Media URLs and post information are stored in SQLite.
+7. The feed API retrieves posts along with author information.
+8. Users can view posts and delete their own content.
 
-## Getting Started
-
-### Prerequisites
-
-- Python
-- uv
-- ImageKit account
+## Installation and Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
-cd <your-project-folder>
+git clone https://github.com/VikashBasfore/simple-social-fastapi.git
+cd simple-social-fastapi
 ```
 
 ### 2. Install Dependencies
@@ -87,79 +81,83 @@ uv sync
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file in the project root.
+Create a `.env` file in the project root and configure the required credentials.
 
 ```env
 IMAGEKIT_PRIVATE_KEY=your_private_key
 IMAGEKIT_PUBLIC_KEY=your_public_key
-IMAGEKIT_URL=your_imagekit_url_endpoint
+IMAGEKIT_URL=your_imagekit_url
 ```
 
-Also configure the authentication secret required by your application.
+Keep your `.env` file private. Never commit credentials or secret keys to GitHub.
 
-**Important:** Never upload your `.env` file or API credentials to GitHub.
-
-### 4. Start the FastAPI Backend
+### 4. Run the FastAPI Backend
 
 ```bash
 uv run python main.py
 ```
 
-Backend URL:
+The backend is configured to run using:
 
-http://127.0.0.1:8000
+```python
+uvicorn.run(
+    "app.app:app",
+    host="0.0.0.0",
+    port=8000,
+    reload=True,
+    app_dir="src"
+)
+```
 
-Swagger API Documentation:
+### 5. Run the Streamlit Frontend
 
-http://127.0.0.1:8000/docs
-
-### 5. Start the Streamlit Frontend
-
-Open another terminal:
+Open another terminal and execute:
 
 ```bash
 uv run python -m streamlit run frontend.py
 ```
 
-Frontend URL:
+## Application URLs
 
-http://localhost:8501
+| Service | URL |
+|---|---|
+| FastAPI Backend | http://localhost:8000 |
+| Swagger API Documentation | http://localhost:8000/docs |
+| Streamlit Frontend | http://localhost:8501 |
 
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/auth/register` | Register a new user |
-| POST | `/auth/jwt/login` | Authenticate and generate JWT |
-| GET | `/users/me` | Get logged-in user details |
-| POST | `/upload` | Upload media and create a post |
-| GET | `/feed` | Retrieve posts |
-| DELETE | `/posts/{post_id}` | Delete a user's own post |
+| POST | `/auth/jwt/login` | Authenticate a user |
+| GET | `/users/me` | Retrieve authenticated user details |
+| POST | `/upload` | Upload an image or video |
+| GET | `/feed` | Retrieve social media posts |
+| DELETE | `/posts/{post_id}` | Delete an owned post |
 
-## Security
+## Security and Configuration
 
-Add the following entries to `.gitignore`:
+- JWT-based authentication for protected endpoints.
+- Environment variables for sensitive credentials.
+- Database-backed user and post management.
+- `.gitignore` configured to exclude environment files, local databases, and Python cache files.
 
-```gitignore
-.env
-.venv/
-__pycache__/
-*.py[cod]
-test.db
-.streamlit/secrets.toml
-```
+## Learning Outcomes
 
-Never expose API keys, database credentials, or JWT secrets in a public repository.
+Through this project, I gained practical experience in:
 
-## What I Learned
+- Building RESTful APIs using FastAPI.
+- Implementing JWT authentication.
+- Working with asynchronous database operations.
+- Integrating SQLAlchemy with SQLite.
+- Handling image and video uploads.
+- Integrating third-party cloud storage.
+- Connecting a Streamlit frontend with a FastAPI backend.
+- Structuring and managing a Python application.
 
-- Building REST APIs using FastAPI
-- Creating GET, POST, and DELETE endpoints
-- Working with Pydantic schemas
-- Using dependency injection with `Depends`
-- Connecting databases using SQLAlchemy
-- Implementing JWT authentication
-- Protecting API endpoints
-- Uploading and retrieving media using ImageKit
-- Connecting Streamlit with FastAPI
-- Debug
+---
+
+**Developer:** Vikash Basfore
+
+**GitHub Repository:** https://github.com/VikashBasfore/simple-social-fastapi
